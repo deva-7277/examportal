@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +21,9 @@ public class ExamserverApplication implements CommandLineRunner {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 	public static void main(String[] args) {
 		SpringApplication.run(ExamserverApplication.class, args);
 	}
@@ -29,16 +33,16 @@ public class ExamserverApplication implements CommandLineRunner {
 		System.out.println("Starting code !!");
 
 //		User user = new User();
-//		user.setFirstName("Deva");
-//		user.setEmail("devaa@gmail.com");
-//		user.setUsername("devaa007");
-//		user.setLastName("kaale");
-//		user.setPhone("6437376678");
-//		user.setProfile("defaault.jpg");
-//		user.setPassword("123456");
+//		user.setFirstName("Devanand");
+//		user.setEmail("devadkale@gmail.com");
+//		user.setUsername("deva7277");
+//		user.setLastName("Kale");
+//		user.setPhone("7757085554");
+//		user.setProfile("default.jpg");
+//		user.setPassword(this.bCryptPasswordEncoder.encode("7277"));
 //
 //		Role role = new Role();
-//		role.setRoleId(47L);
+//		role.setRoleId(44L);
 //		role.setRoleName("ADMIN");
 //
 //		Set<UserRole> userRoleSet = new HashSet<>();

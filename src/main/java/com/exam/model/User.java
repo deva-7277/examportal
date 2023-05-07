@@ -1,6 +1,8 @@
 package com.exam.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
 import javax.persistence.*;
@@ -10,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User{
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,6 +24,34 @@ public class User{
     private String email;
     private String phone;
     private boolean enabled = true;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name="user_images",
+        joinColumns = {
+            @JoinColumn(name="user_id")
+        },
+         inverseJoinColumns = {
+            @JoinColumn(name ="image_id")
+         }
+    )
+    private Set<ImageModel> userImages;
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public Set<ImageModel> getUserImages() {
+        return userImages;
+    }
+
+    public void setUserImages(Set<ImageModel> productImages) {
+        this.userImages = productImages;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
     private String profile;
 
     //user many roles
@@ -34,6 +64,8 @@ public class User{
     public User() {
 
     }
+
+
 
     public Set<UserRole> getUserRoles() {
         return userRoles;
@@ -55,13 +87,6 @@ public class User{
         this.profile = profile;
     }
 
-    public String getProfile() {
-        return profile;
-    }
-
-    public void setProfile(String profile) {
-        this.profile = profile;
-    }
 
     public Long getId() {
         return id;
@@ -75,8 +100,35 @@ public class User{
         return username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        Set<Authority> set = new HashSet<>();
+
+        this.userRoles.forEach(userRole -> {
+            set.add(new Authority(userRole.getRole().getRoleName()));
+        });
+
+        return set;
     }
 
     public String getPassword() {
@@ -126,4 +178,6 @@ public class User{
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
+
 }
