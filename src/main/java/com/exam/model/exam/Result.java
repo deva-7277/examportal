@@ -23,6 +23,8 @@ public class Result implements Serializable {
     private String grade;
     private String remark;
 
+    private String maxMarks;
+
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
     private Date examDate;
@@ -42,7 +44,7 @@ public class Result implements Serializable {
     public Result() {
     }
 
-    public Result(String status, Long categoryId, Long quizId, Long examId, Long studentId, Long attempted, Long correct, Long incorrect, Long marksObtained, String grade, String remark) {
+    public Result(String status, Long categoryId, Long quizId, Long examId, Long studentId, Long attempted, Long correct, Long incorrect, Long marksObtained, String grade, String remark, String maxMarks) {
         this.status = status;
         this.categoryId = categoryId;
         this.quizId = quizId;
@@ -54,6 +56,7 @@ public class Result implements Serializable {
         this.marksObtained = marksObtained;
         this.grade = grade;
         this.remark = remark;
+        this.maxMarks = maxMarks;
     }
 
     public Long getId() {
@@ -152,6 +155,30 @@ public class Result implements Serializable {
         this.remark = remark;
     }
 
+    public String getMaxMarks() {
+        return maxMarks;
+    }
+
+    public void setMaxMarks(String maxMarks) {
+        this.maxMarks = maxMarks;
+    }
+
+    public Date getExamDate() {
+        return examDate;
+    }
+
+    public void setExamDate(Date examDate) {
+        this.examDate = examDate;
+    }
+
+    public Date getExamTime() {
+        return examTime;
+    }
+
+    public void setExamTime(Date examTime) {
+        this.examTime = examTime;
+    }
+
     @Override
     public String toString() {
         return "Result{" +
@@ -167,6 +194,9 @@ public class Result implements Serializable {
                 ", marksObtained=" + marksObtained +
                 ", grade='" + grade + '\'' +
                 ", remark='" + remark + '\'' +
+                ", maxMarks=" + maxMarks +
+                ", examDate=" + examDate +
+                ", examTime=" + examTime +
                 '}';
     }
 }
