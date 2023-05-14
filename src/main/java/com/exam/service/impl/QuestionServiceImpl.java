@@ -4,6 +4,8 @@ import com.exam.model.exam.Question;
 import com.exam.model.exam.Quiz;
 import com.exam.repo.QuestionRepository;
 import com.exam.service.QuestionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import java.util.Set;
 @Service
 public class QuestionServiceImpl implements QuestionService {
 
+    private static final Logger log = LoggerFactory.getLogger(CategoryServiceImpl.class);
     @Autowired
     private QuestionRepository questionRepository;
 

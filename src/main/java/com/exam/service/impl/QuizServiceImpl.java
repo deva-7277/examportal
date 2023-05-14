@@ -4,7 +4,11 @@ import com.exam.model.exam.Category;
 import com.exam.model.exam.Quiz;
 import com.exam.repo.QuizRepository;
 import com.exam.service.QuizService;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,7 +18,10 @@ import java.util.Set;
 
 @Service
 @Transactional
+
 public class QuizServiceImpl implements QuizService {
+
+    private static final Logger log = LoggerFactory.getLogger(CategoryServiceImpl.class);
     @Autowired
     private QuizRepository quizRepository;
 
@@ -29,11 +36,13 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    @Cacheable(cacheNames = "quiz", key = "'#setOfQuiz'")
     public Set<Quiz> getQuizzes() {
         return new HashSet<>(this.quizRepository.findAll());
     }
 
     @Override
+    @Cacheable(cacheNames = "quiz", key = "'#singleQuiz'")
     public Quiz getQuiz(Long quizId) {
         return this.quizRepository.findById(quizId).get();
     }
