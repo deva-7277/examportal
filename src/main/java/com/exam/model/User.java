@@ -26,7 +26,7 @@ public class User implements UserDetails, Serializable {
     private String phone;
     private boolean enabled = true;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name="user_images",
         joinColumns = {
             @JoinColumn(name="user_id")
@@ -35,17 +35,17 @@ public class User implements UserDetails, Serializable {
             @JoinColumn(name ="image_id")
          }
     )
-    private Set<ImageModel> userImages;
+    private ImageModel userImages;
 
     public String getProfile() {
         return profile;
     }
 
-    public Set<ImageModel> getUserImages() {
+    public ImageModel getUserImages() {
         return userImages;
     }
 
-    public void setUserImages(Set<ImageModel> productImages) {
+    public void setUserImages(ImageModel productImages) {
         this.userImages = productImages;
     }
 

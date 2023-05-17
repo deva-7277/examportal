@@ -16,7 +16,7 @@ public class ImageModel implements Serializable {
     @Column(length = 50000000)
     private byte[] picByte;
 
-    @ManyToOne
+    @OneToOne
     User user;
 
     public ImageModel() {

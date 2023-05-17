@@ -10,12 +10,15 @@ import java.util.Set;
 
 @Repository
 public interface ResultRepository extends JpaRepository<Result, Long> {
-    @Query(value = "Select * from exam.results where r.quiz_id = :quizId order by :sortBy :sortDir",nativeQuery = true)
-    Set<Result> findAllByQuizId(Long quizId, String sortBy, String sortDir);
+    @Query(value = "SELECT * FROM EXAM.RESULTS R WHERE R.quiz_id= :quizId ORDER BY R.:sortBy :sortDir",nativeQuery = true)
+    List<Result> findAllByQuizId(Long quizId, String sortBy, String sortDir);
 
     @Query(value = "Select * from exam.results r where r.student_id = :student_id AND r.quiz_id = :quiz_id",nativeQuery = true)
-    Set<Result> findAllByQuizIdAndUserId(Long quiz_id, Long student_id);
+    List<Result> findAllByQuizIdAndUserId(Long quiz_id, Long student_id);
 
     @Query(value = "SELECT * FROM EXAM.RESULTS R WHERE R.quiz_id= :quizId ORDER BY R.marks_obtained DESC LIMIT 3", nativeQuery = true)
     List<Result> findTop3(Long quizId);
+
+    @Query(value = "SELECT * FROM EXAM.RESULTS R WHERE R.quiz_id= :quizId", nativeQuery = true)
+    List<Result> findAllResults(Long quizId);
 }

@@ -1,5 +1,6 @@
 package com.exam.controller;
 
+import com.exam.DTO.ResultResponseDto;
 import com.exam.DTO.TopQuizResult;
 import com.exam.model.exam.Quiz;
 import com.exam.model.exam.Result;
@@ -37,8 +38,8 @@ public class ResultController {
         return this.resultService.saveResult(result);
     }
 
-    @GetMapping("/get-result")
-    public Result getResult(@RequestParam Long id){
+    @GetMapping("/get-result/")
+    public ResultResponseDto getResult(@RequestParam Long id){
         log.info("getResult from ResultController called");
         return this.resultService.getResult(id);
     }
@@ -49,12 +50,10 @@ public class ResultController {
     * If the request is for Admin, it will show all the Results for a Quiz of all users
     * */
     @GetMapping("/get-all-results-of-a-quiz")
-    public Set<Result> getAllResultsForAQuiz(@RequestParam Long quizId ,
-                                             @RequestParam Long userId,
-                                             @RequestParam(value = "sortBy", defaultValue ="id", required = false) String sortBy,
-                                             @RequestParam(value = "sortBy", defaultValue ="desc", required = false) String sortDir){
+    public List<ResultResponseDto> getAllResultsForAQuiz(@RequestParam Long quizId ,
+                                                         @RequestParam Long userId){
         log.info("getAllResultsForAQuiz from RestController called");
-        return this.resultService.getAllResultsForAQuiz(quizId, userId, sortBy, sortDir);
+        return this.resultService.getAllResultsForAQuiz(quizId, userId);
     }
 
     @GetMapping("/get-top-3-results-in-quiz")
