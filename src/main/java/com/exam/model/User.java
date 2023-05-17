@@ -6,13 +6,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User implements UserDetails, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,7 +26,7 @@ public class User implements UserDetails {
     private String phone;
     private boolean enabled = true;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name="user_images",
         joinColumns = {
             @JoinColumn(name="user_id")
@@ -34,17 +35,17 @@ public class User implements UserDetails {
             @JoinColumn(name ="image_id")
          }
     )
-    private Set<ImageModel> userImages;
+    private ImageModel userImages;
 
     public String getProfile() {
         return profile;
     }
 
-    public Set<ImageModel> getUserImages() {
+    public ImageModel getUserImages() {
         return userImages;
     }
 
-    public void setUserImages(Set<ImageModel> productImages) {
+    public void setUserImages(ImageModel productImages) {
         this.userImages = productImages;
     }
 

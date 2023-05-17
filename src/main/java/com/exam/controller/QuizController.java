@@ -5,6 +5,8 @@ import com.exam.model.exam.Quiz;
 import com.exam.repo.CategoryRepository;
 import com.exam.service.QuizService;
 import org.apache.coyote.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.List;
 @CrossOrigin("*")
 @RequestMapping("/quiz")
 public class QuizController {
+    Logger log = LoggerFactory.getLogger(CategoryController.class);
     @Autowired
     private QuizService quizService;
     @Autowired

@@ -2,7 +2,9 @@ package com.exam.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
-public class Authority implements GrantedAuthority {
+import java.io.Serializable;
+
+public class Authority implements GrantedAuthority , Serializable {
 
     private String authority;
 

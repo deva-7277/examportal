@@ -1,10 +1,11 @@
 package com.exam.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name ="image_model")
-public class ImageModel {
+public class ImageModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,7 +16,7 @@ public class ImageModel {
     @Column(length = 50000000)
     private byte[] picByte;
 
-    @ManyToOne
+    @OneToOne
     User user;
 
     public ImageModel() {

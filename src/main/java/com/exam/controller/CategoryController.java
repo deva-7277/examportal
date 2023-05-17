@@ -2,6 +2,8 @@ package com.exam.controller;
 
 import com.exam.model.exam.Category;
 import com.exam.service.CategoryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/category")
 @CrossOrigin("*")
 public class CategoryController {
+
+    Logger log = LoggerFactory.getLogger(CategoryController.class);
 
     @Autowired
     private CategoryService categoryService;
@@ -24,7 +28,11 @@ public class CategoryController {
     //get category
     @GetMapping("/{categoryId}")
     public Category getCategory(@PathVariable("categoryId") Long categoryId) {
-        return this.categoryService.getCategory(categoryId);
+        long start = System.currentTimeMillis();
+        Category category =  this.categoryService.getCategory(categoryId);
+        long finish = System.currentTimeMillis();
+        log.info("Time taken by getCategory is"+(finish-start));
+        return category;
     }
 
     //get all categories
