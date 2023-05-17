@@ -3,11 +3,12 @@ package com.exam.model.exam;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Quiz {
+public class Quiz implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,7 +30,7 @@ public class Quiz {
     @ManyToOne(fetch = FetchType.EAGER)
     private Category category;
 
-    @OneToMany(mappedBy = "quiz", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER , cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Question> questions = new HashSet<>();
 
