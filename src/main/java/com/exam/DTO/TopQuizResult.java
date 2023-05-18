@@ -18,6 +18,9 @@ public class TopQuizResult implements Serializable {
 
     }
 
+    public TopQuizResult() {
+    }
+
     public TopQuizResult(int rank, String studentName, String quizName, Long marksObtained, String maxMarks) {
         this.rank = rank;
         this.studentName = studentName;

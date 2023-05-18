@@ -62,4 +62,10 @@ public class ResultController {
         List<TopQuizResult> allResults = this.resultService.getAllResults(quizId);
         return allResults;
     }
+
+    @GetMapping("/top3")
+    public List<List<TopQuizResult>> topResults(){
+        log.info("Into topResults method in ResultController");
+        return this.resultService.topResults();
+    }
 }

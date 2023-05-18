@@ -1,5 +1,6 @@
 package com.exam.repo;
 
+import com.exam.DTO.TopQuizResult;
 import com.exam.model.exam.Result;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,9 @@ public interface ResultRepository extends JpaRepository<Result, Long> {
 
     @Query(value = "SELECT * FROM EXAM.RESULTS R WHERE R.quiz_id= :quizId ORDER BY R.marks_obtained DESC LIMIT 3", nativeQuery = true)
     List<Result> findTop3(Long quizId);
+
+    @Query(value = "SELECT * FROM EXAM.RESULTS R WHERE R.quiz_id= :quizId ORDER BY R.marks_obtained DESC LIMIT 3", nativeQuery = true)
+    List<TopQuizResult> findTop(Long quizId);
 
     @Query(value = "SELECT * FROM EXAM.RESULTS R WHERE R.quiz_id= :quizId", nativeQuery = true)
     List<Result> findAllResults(Long quizId);

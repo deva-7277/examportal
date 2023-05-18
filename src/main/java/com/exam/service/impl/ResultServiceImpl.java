@@ -6,6 +6,7 @@ import com.exam.model.User;
 import com.exam.model.UserRole;
 import com.exam.model.exam.Quiz;
 import com.exam.model.exam.Result;
+import com.exam.repo.CategoryRepository;
 import com.exam.repo.QuizRepository;
 import com.exam.repo.ResultRepository;
 import com.exam.repo.UserRepository;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -27,6 +29,9 @@ public class ResultServiceImpl implements ResultService {
     Logger log = LoggerFactory.getLogger(ResultServiceImpl.class);
     @Autowired
     private ResultRepository resultRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private QuizRepository quizRepository;
@@ -161,5 +166,61 @@ public class ResultServiceImpl implements ResultService {
                 )).collect(Collectors.toList());
 
         return top3ResultsResponse;
+    }
+
+    @Override
+    @Cacheable(value = "results", key="'#top3'")
+    public List<List<TopQuizResult>> topResults() {
+        List<Quiz> allCategories = this.quizRepository.findAll();
+        List<Long> qIds = new ArrayList<>();
+        for(int i = 0; i< allCategories.size(); i++){
+            log.info("Adding quiz id to the all Quiz Id list :"+allCategories.get(i).getqId());
+            qIds.add(allCategories.get(i).getqId());
+        }
+        List<List<TopQuizResult>> topResults = new ArrayList<>();
+        for(int i = 0; i<qIds.size(); i++){
+
+            List<Result> top = this.resultRepository.findTop3(qIds.get(i));
+            log.info("fetched all the top 3 results from quiz id : "+qIds.get(i));
+//            AtomicInteger j = new AtomicInteger(0);
+            Quiz quiz = this.quizRepository.findById(qIds.get(i)).get();
+            log.info("Currently fetching results for quiz"+ quiz.getTitle());
+//            AtomicInteger rank = new AtomicInteger(1);
+            log.info("getAllResults from ResultServiceImpl called");
+            String quizName = quiz.getTitle();
+            String maxMarks = quiz.getMaxMarks();
+            int k = 0;
+            int ranks = 1;
+            List<TopQuizResult> toDtos = new ArrayList<>();
+            while(k<top.size()){
+
+                Result r = this.resultRepository.findById(top.get(k).getId()).get();
+                log.info("specific result fetched "+r.getStatus());
+                TopQuizResult t = new TopQuizResult();
+                t.setRank(ranks++);
+                t.setStudentName(this.userRepository.findById(r.getStudentId()).get().getFirstName()+" "+this.userRepository.findById(r.getStudentId()).get().getLastName());
+                t.setMarksObtained(r.getMarksObtained());
+                t.setMaxMarks(r.getMaxMarks());
+                t.setQuizName(quizName);
+                toDtos.add(t);
+                k++;
+                log.info("TopQuizResult added to the list");
+            }
+//            List<TopQuizResult> toDto = top.stream().map(
+//                    r -> new TopQuizResult(
+//                    rank.getAndIncrement(),
+//                    this.userRepository.findById(top.get(j.getAndIncrement()).getStudentId()).get().getFirstName(),
+//                    quizName,
+//                    top.get(j.get()).getMarksObtained(),
+//                    maxMarks
+//            )).collect(Collectors.toList());
+            k = 0;
+            if(toDtos.size()>0) {
+                topResults.add(toDtos);
+            }
+            log.info("All Top Quiz Results added to All Top Results");
+        }
+
+        return  topResults;
     }
 }

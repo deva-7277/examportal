@@ -15,4 +15,6 @@ public interface ResultService {
     List<ResultResponseDto> getAllResultsForAQuiz(Long quizId, Long userId);
 
     List<TopQuizResult> getAllResults(Long quizId);
+
+    List<List<TopQuizResult>> topResults();
 }
