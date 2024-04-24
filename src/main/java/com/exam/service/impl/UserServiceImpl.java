@@ -67,9 +67,13 @@ import com.exam.model.UserRole;
 import com.exam.repo.RoleRepository;
 import com.exam.repo.UserRepository;
 import com.exam.service.UserService;
+import com.github.fge.jsonpatch.JsonPatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Set;
 
 
@@ -117,4 +121,29 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long userId) {
         this.userRepository.deleteById(userId);
 }
+
+    @Override
+    public User updateUser(Long userId,User user) {
+        User existingUser = userRepository.findById(userId).orElse(null);
+        if (existingUser != null) {
+            // Update user properties
+            existingUser.setUsername(user.getUsername());
+            existingUser.setPassword(user.getPassword());
+            existingUser.setFirstName(user.getFirstName());
+            existingUser.setLastName(user.getLastName());
+            existingUser.setEmail(user.getEmail());
+            existingUser.setPhone(user.getPhone());
+            existingUser.setEnabled(user.isEnabled());
+
+            // Handle image upload
+            byte[] imageFile = user.getImage();
+            if (imageFile != null) {
+                existingUser.setImage(imageFile);
+            }
+
+            return userRepository.save(existingUser);
+        }
+        return null;
+    }
+
 }

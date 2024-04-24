@@ -1,31 +1,28 @@
 package com.exam.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
-@Table(name ="image_model")
-public class ImageModel implements Serializable {
+@Table(name = "image_model")
+public class ImageModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
-    private String type;
 
-    @Column(length = 50000000)
-    private byte[] picByte;
+    private String imageName;
+    private String imageType;
 
-    @OneToOne
-    User user;
+    @Lob
+    private byte[] imageData;
 
     public ImageModel() {
     }
 
-    public ImageModel(String name, String type, byte[] picByte) {
-        this.name = name;
-        this.type = type;
-        this.picByte = picByte;
+    public ImageModel(String imageName, String imageType, byte[] imageData) {
+        this.imageName = imageName;
+        this.imageType = imageType;
+        this.imageData = imageData;
     }
 
     public Long getId() {
@@ -36,27 +33,27 @@ public class ImageModel implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getImageName() {
+        return imageName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
-    public String getType() {
-        return type;
+    public String getImageType() {
+        return imageType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
     }
 
-    public byte[] getPicByte() {
-        return picByte;
+    public byte[] getImageData() {
+        return imageData;
     }
 
-    public void setPicByte(byte[] picByte) {
-        this.picByte = picByte;
+    public void setImageData(byte[] imageData) {
+        this.imageData = imageData;
     }
 }

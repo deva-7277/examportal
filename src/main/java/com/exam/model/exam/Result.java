@@ -25,19 +25,19 @@ public class Result implements Serializable {
 
     private String maxMarks;
 
-    @Temporal(TemporalType.DATE)
+//    @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    private Date examDate;
+    private String examDate;
 
-    @Temporal(TemporalType.TIME)
+//    @Temporal(TemporalType.TIME)
     @Column(nullable = false)
-    private Date examTime;
+    private String examTime;
 
-    @PrePersist
-    private void onCreate(){
-        examDate = new Date();
-        examTime = new Date();
-    }
+//    @PrePersist
+//    private void onCreate(){
+//        examDate = new Date();
+//        examTime = new Date();
+//    }
 
 
 
@@ -163,20 +163,20 @@ public class Result implements Serializable {
         this.maxMarks = maxMarks;
     }
 
-    public Date getExamDate() {
+    public String getExamDate() {
         return examDate;
     }
 
     public void setExamDate(Date examDate) {
-        this.examDate = examDate;
+        this.examDate = String.valueOf(examDate);
     }
 
-    public Date getExamTime() {
+    public String getExamTime() {
         return examTime;
     }
 
     public void setExamTime(Date examTime) {
-        this.examTime = examTime;
+        this.examTime = String.valueOf(examTime);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.exam.controller;
 
+import com.exam.config.WebCamConfig;
 import com.exam.model.exam.Category;
 import com.exam.model.exam.Quiz;
 import com.exam.repo.CategoryRepository;
@@ -21,6 +22,7 @@ public class QuizController {
     Logger log = LoggerFactory.getLogger(CategoryController.class);
     @Autowired
     private QuizService quizService;
+
     @Autowired
     private CategoryRepository categoryRepository;
 

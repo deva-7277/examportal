@@ -2,10 +2,12 @@ package com.exam.controller;
 
 import com.exam.DTO.ResultResponseDto;
 import com.exam.DTO.TopQuizResult;
+import com.exam.config.WebCamConfig;
 import com.exam.model.exam.Quiz;
 import com.exam.model.exam.Result;
 import com.exam.repo.QuizRepository;
 import com.exam.service.ResultService;
+import com.github.sarxos.webcam.Webcam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +28,15 @@ public class ResultController {
     @Autowired
     private QuizRepository quizRepository;
 
+    WebCamConfig webcam = new WebCamConfig();
+
     @PostMapping("/save-result")
     public Result saveResult(@RequestBody Result result){
         log.info("save result from Result Controller called");
+
+        log.info("shutting webcam down!");
+//        webcam.closeWebCam();
+
         Long quizId = result.getQuizId();
         Quiz quiz = quizRepository.findById(quizId).get();
         Long categoryId = quiz.getCategory().getCid();
@@ -39,10 +47,11 @@ public class ResultController {
     }
 
     @GetMapping("/get-result/")
-    public ResultResponseDto getResult(@RequestParam Long id){
+    public ResultResponseDto getResult(@RequestParam("id") Long id) {
         log.info("getResult from ResultController called");
         return this.resultService.getResult(id);
     }
+
     /*
     * This API is for getting all the Results of a quiz
     * This API handles both the User and Admin
@@ -67,5 +76,11 @@ public class ResultController {
     public List<List<TopQuizResult>> topResults(){
         log.info("Into topResults method in ResultController");
         return this.resultService.topResults();
+    }
+
+    @GetMapping("/all-results-for-a-user")
+    public List<ResultResponseDto> userAllResults(@RequestParam Long userId){
+        log.info("Into userAllResults method in ResultController");
+        return this.resultService.getUserAllResults(userId);
     }
 }

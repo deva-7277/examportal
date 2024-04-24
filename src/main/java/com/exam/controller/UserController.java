@@ -1,123 +1,18 @@
-//package com.exam.controller;
-//
-//import com.exam.helper.UserFoundException;
-//import com.exam.model.ImageModel;
-//import com.exam.model.Role;
-//import com.exam.model.User;
-//import com.exam.model.UserRole;
-//import com.exam.service.UserService;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.core.io.ClassPathResource;
-//import org.springframework.http.MediaType;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.web.bind.annotation.*;
-//import org.springframework.web.multipart.MultipartFile;
-//import org.springframework.web.multipart.MultipartResolver;
-//
-//import javax.servlet.MultipartConfigElement;
-//import java.io.File;
-//import java.io.IOException;
-//import java.nio.file.Files;
-//import java.nio.file.Path;
-//import java.nio.file.Paths;
-//import java.nio.file.StandardCopyOption;
-//import java.util.HashSet;
-//import java.util.Set;
-//
-//
-//
-//@RestController
-//@RequestMapping("/user")
-//@CrossOrigin("*")
-//public class UserController {
-//
-//    @Autowired
-//    private UserService userService;
-//
-//    @Autowired
-//    private BCryptPasswordEncoder bCryptPasswordEncoder;
-//
-//
-//
-//
-//    @PostMapping(value = {"/"}, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-//    public User createUser(@RequestPart("user") User user , @RequestPart("imageFile") MultipartFile[] file) throws Exception {
-//
-//
-//
-////        Encrypting password with Bcrypt password encoder
-//        user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
-//
-//
-//
-//
-//        Role role = new Role();
-//        role.setRoleId(45L);
-//        role.setRoleName("NORMAL");
-//
-//        Set<UserRole> roles = new HashSet<>();
-//        UserRole userRole = new UserRole();
-//        userRole.setUser(user);
-//        userRole.setRole(role);
-//        user.setProfile("default.png");
-//        roles.add(userRole);
-//
-//        try{
-//            Set<ImageModel> images = uploadImage(file);
-//            user.setUserImages(images);
-//            return userService.createUser(user,roles);
-//        }catch (Exception e){
-//            System.out.println(e.getMessage());
-//            return  null;
-//        }
-//    }
-//
-//    public Set<ImageModel> uploadImage(MultipartFile[] multipartFiles) throws IOException {
-//        Set<ImageModel> imageModels = new HashSet<>();
-//        for(MultipartFile file : multipartFiles){
-//            ImageModel imageModel = new ImageModel(
-//                    file.getOriginalFilename(),
-//                    file.getContentType(),
-//                    file.getBytes()
-//            );
-//            imageModels.add(imageModel);
-//        }
-//        return imageModels;
-//    }
-//
-//    //fetch user
-//    @GetMapping("/{username}")
-//    public User getUser(@PathVariable("username") String username){
-//        return this.userService.getUser(username);
-//    }
-//
-//    //delete user
-//    @DeleteMapping("/{userId}")
-//    public String deleteUser(@PathVariable("userId") Long userId){
-//        this.userService.deleteUser(userId);
-//        return "User with user id " + userId + " deleted Successfully.";
-//    }
-//
-//
-//    @ExceptionHandler(UserFoundException.class)
-//    public ResponseEntity<?> exceptionHandler(UserFoundException ex) {
-//        return ResponseEntity.ok(ex.getMessage());
-//    }
-//}
-
 package com.exam.controller;
 
 import com.exam.helper.UserFoundException;
+import com.exam.model.ImageModel;
 import com.exam.model.Role;
 import com.exam.model.User;
 import com.exam.model.UserRole;
 import com.exam.service.UserService;
+import com.github.fge.jsonpatch.JsonPatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -125,6 +20,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin("*")
+@EnableWebMvc
 public class UserController {
 
     @Autowired
@@ -134,43 +30,86 @@ public class UserController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/")
-    public User createUser(@RequestBody User user) throws Exception {
+    public User createUser(@RequestParam("username") String username,
+                           @RequestParam("password") String password,
+                           @RequestParam("firstName") String firstName,
+                           @RequestParam("lastName") String lastName,
+                           @RequestParam("email") String email,
+                           @RequestParam("phone") String phone,
+                           @RequestParam("imageFile") MultipartFile imageFile) throws Exception {
+        // Create a new User object and populate its fields with the provided request parameters
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPhone(phone);
 
-        user.setProfile("default.png");
+        // Process the imageFile and save it to the database
+        ImageModel imageModel = saveImage(imageFile);
+        user.setImage(imageModel.getImageData());
 
-//        Encrypting password with Bcrypt password encoder
-        user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
-
+        // Create the user role and set it for the user
         Role role = new Role();
         role.setRoleId(45L);
         role.setRoleName("NORMAL");
 
-        Set<UserRole> roles = new HashSet<>();
         UserRole userRole = new UserRole();
         userRole.setUser(user);
         userRole.setRole(role);
 
+        Set<UserRole> roles = new HashSet<>();
         roles.add(userRole);
+        user.setUserRoles(roles);
 
-        return this.userService.createUser(user,roles);
+        // Call the service to create the user
+        return userService.createUser(user,roles);
     }
 
-    //fetch user
+    private ImageModel saveImage(MultipartFile imageFile) throws Exception {
+        // Process the image file and save it to the database
+        if (!imageFile.isEmpty()) {
+            // Extract the necessary information from the image file and create the ImageModel object
+            String imageName = imageFile.getOriginalFilename();
+            String contentType = imageFile.getContentType();
+            byte[] imageBytes = imageFile.getBytes();
+
+            ImageModel imageModel = new ImageModel(imageName, contentType, imageBytes);
+
+            // Save the image to the database using your image repository or service
+            // Example: imageRepository.save(imageModel);
+
+            return imageModel;
+        }
+
+        return null;
+    }
+
+    // Fetch user
     @GetMapping("/{username}")
-    public User getUser(@PathVariable("username") String username){
-        return this.userService.getUser(username);
+    public User getUser(@PathVariable("username") String username) {
+        return userService.getUser(username);
     }
 
-    //delete user
+    // Delete user
     @DeleteMapping("/{userId}")
-    public String deleteUser(@PathVariable("userId") Long userId){
-        this.userService.deleteUser(userId);
+    public String deleteUser(@PathVariable("userId") Long userId) {
+        userService.deleteUser(userId);
         return "User with user id " + userId + " deleted Successfully.";
     }
 
+    @PutMapping("/{userId}")
+    public ResponseEntity<User> updateUser(
+            @PathVariable Long userId,
+            @RequestBody User user
+    ) {
+        User updatedUser = userService.updateUser(userId, user);
+        return ResponseEntity.ok(updatedUser);
+    }
 
     @ExceptionHandler(UserFoundException.class)
     public ResponseEntity<?> exceptionHandler(UserFoundException ex) {
         return ResponseEntity.ok(ex.getMessage());
-}
+    }
 }

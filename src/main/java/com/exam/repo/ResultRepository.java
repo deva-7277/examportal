@@ -25,4 +25,6 @@ public interface ResultRepository extends JpaRepository<Result, Long> {
 
     @Query(value = "SELECT * FROM EXAM.RESULTS R WHERE R.quiz_id= :quizId", nativeQuery = true)
     List<Result> findAllResults(Long quizId);
+
+    List<Result> findByStudentId(Long userId);
 }

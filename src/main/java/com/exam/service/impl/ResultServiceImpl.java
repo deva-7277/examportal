@@ -64,6 +64,7 @@ public class ResultServiceImpl implements ResultService {
         response.setRemark(result.getRemark());
         response.setExamTime(result.getExamTime());
         response.setExamDate(result.getExamDate());
+        System.out.println(result.getExamDate());
         response.setMaxMarks(result.getMaxMarks());
         response.setStudentId(result.getStudentId());
         response.setStudentName(studentName);
@@ -86,7 +87,7 @@ public class ResultServiceImpl implements ResultService {
     public List<ResultResponseDto> getAllResultsForAQuiz(Long quizId, Long userId) {
         User user = userRepository.findById(userId).get();
         log.info("User fetched successfully");
-        Set<UserRole> roleSet = user.getUserRoles();
+        Set<UserRole> roleSet = (Set<UserRole>) user.getUserRoles();
 
         Quiz quiz = this.quizRepository.findById(quizId).get();
         String quizName = quiz.getTitle();
@@ -222,5 +223,28 @@ public class ResultServiceImpl implements ResultService {
         }
 
         return  topResults;
+    }
+
+    @Override
+    public List<ResultResponseDto> getUserAllResults(Long userId) {
+        List<Result> userAllResults = resultRepository.findByStudentId(userId);
+        List<ResultResponseDto> response = userAllResults.stream().map(result -> new ResultResponseDto(
+                result.getId(),
+                categoryRepository.findById(result.getCategoryId()).get().getTitle(),
+                quizRepository.findById(result.getQuizId()).get().getTitle(),
+                result.getStudentId(),
+                this.userRepository.findById(result.getStudentId()).get().getFirstName()+" "+ this.userRepository.findById(result.getStudentId()).get().getLastName(),
+                result.getAttempted(),
+                result.getCorrect(),
+                result.getIncorrect(),
+                result.getMarksObtained(),
+                result.getGrade(),
+                result.getRemark(),
+                result.getMaxMarks(),
+                result.getExamDate(),
+                result.getExamTime(),
+                result.getStatus()
+        )).collect(Collectors.toList());
+        return response;
     }
 }

@@ -24,11 +24,9 @@ public class ResultResponseDto implements Serializable {
     private String remark;
     private String maxMarks;
 
-    @Temporal(TemporalType.DATE)
-    private Date examDate;
+    private String examDate;
 
-    @Temporal(TemporalType.TIME)
-    private Date examTime;
+    private String examTime;
 
     private String status;
 
@@ -42,7 +40,7 @@ public class ResultResponseDto implements Serializable {
     public ResultResponseDto() {
     }
 
-    public ResultResponseDto(Long id, String category, String quiz, Long studentId, String studentName, Long attempted, Long correct, Long incorrect, Long marksObtained, String grade, String remark, String maxMarks, Date examDate, Date examTime, String status) {
+    public ResultResponseDto(Long id, String category, String quiz, Long studentId, String studentName, Long attempted, Long correct, Long incorrect, Long marksObtained, String grade, String remark, String maxMarks, String examDate, String examTime, String status) {
         this.id = id;
         this.category = category;
         this.quiz = quiz;

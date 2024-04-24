@@ -24,36 +24,11 @@ public class User implements UserDetails, Serializable {
     private String lastName;
     private String email;
     private String phone;
+
+    @Lob
+    private byte[] image;
     private boolean enabled = true;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name="user_images",
-        joinColumns = {
-            @JoinColumn(name="user_id")
-        },
-         inverseJoinColumns = {
-            @JoinColumn(name ="image_id")
-         }
-    )
-    private ImageModel userImages;
-
-    public String getProfile() {
-        return profile;
-    }
-
-    public ImageModel getUserImages() {
-        return userImages;
-    }
-
-    public void setUserImages(ImageModel productImages) {
-        this.userImages = productImages;
-    }
-
-    public void setProfile(String profile) {
-        this.profile = profile;
-    }
-
-    private String profile;
 
     //user many roles
 
@@ -76,7 +51,7 @@ public class User implements UserDetails, Serializable {
         this.userRoles = userRoles;
     }
 
-    public User(Long id, String username, String password, String firstName, String lastName, String email, String phone, boolean enabled, String profile) {
+    public User(Long id, String username, String password, String firstName, String lastName, String email, String phone, boolean enabled, String profile, byte[] image) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -85,9 +60,17 @@ public class User implements UserDetails, Serializable {
         this.email = email;
         this.phone = phone;
         this.enabled = enabled;
-        this.profile = profile;
+        this.image = image;
     }
 
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 
     public Long getId() {
         return id;

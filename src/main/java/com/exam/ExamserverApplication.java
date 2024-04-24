@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -28,12 +29,18 @@ public class ExamserverApplication implements CommandLineRunner {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	public static void main(String[] args) {
-		SpringApplication.run(ExamserverApplication.class, args);
+
+//		SpringApplication.run(ExamserverApplication.class, args);
+
+		SpringApplicationBuilder builder = new SpringApplicationBuilder(ExamserverApplication.class);
+		builder.headless(false);
+		builder.run(args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("Starting code !!");
+
 
 //		User user = new User();
 //		user.setFirstName("Devanand");

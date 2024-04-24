@@ -21,7 +21,8 @@ package com.exam.service;
 
 import com.exam.model.User;
 import com.exam.model.UserRole;
-import com.exam.model.exam.Question;
+import com.github.fge.jsonpatch.JsonPatch;
+import org.springframework.web.bind.annotation.RequestPart;
 
 import java.util.Set;
 
@@ -38,4 +39,5 @@ public interface UserService {
     public void deleteUser(Long userId);
 
 
+    User updateUser(Long userId,User user);
 }

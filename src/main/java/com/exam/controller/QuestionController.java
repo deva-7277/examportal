@@ -1,5 +1,6 @@
 package com.exam.controller;
 
+import com.exam.config.WebCamConfig;
 import com.exam.model.exam.Question;
 import com.exam.model.exam.Quiz;
 import com.exam.repo.QuizRepository;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.Query;
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -24,6 +26,8 @@ public class QuestionController {
 
     @Autowired
     private QuizRepository quizRepository;
+
+    WebCamConfig webcam = new WebCamConfig();
 
     //add question
     @PostMapping("/")
@@ -42,7 +46,7 @@ public class QuestionController {
 
     //get all question of any quiz
     @GetMapping("/quiz/{qid}")
-    public ResponseEntity<?> getQuestionsOfQuiz(@PathVariable("qid") Long qid) {
+    public ResponseEntity<?> getQuestionsOfQuiz(@PathVariable("qid") Long qid) throws IOException {
 //        Quiz quiz = new Quiz();
 //        quiz.setqId(qid);
 //        Set<Question> questionsOfQuiz = this.service.getQuestionsOfQuiz(quiz);
@@ -58,6 +62,8 @@ public class QuestionController {
             q.setAnswer("");
         });
         Collections.shuffle(list);
+
+//        webcam.captureVideo();
         return ResponseEntity.ok(list);
 
 
