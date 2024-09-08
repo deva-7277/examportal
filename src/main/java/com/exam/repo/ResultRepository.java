@@ -2,6 +2,7 @@ package com.exam.repo;
 
 import com.exam.DTO.TopQuizResult;
 import com.exam.model.exam.Result;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,8 +12,8 @@ import java.util.Set;
 
 @Repository
 public interface ResultRepository extends JpaRepository<Result, Long> {
-    @Query(value = "SELECT * FROM EXAM.RESULTS R WHERE R.quiz_id= :quizId ORDER BY R.:sortBy :sortDir",nativeQuery = true)
-    List<Result> findAllByQuizId(Long quizId, String sortBy, String sortDir);
+    @Query(value = "SELECT * FROM EXAM.RESULTS R WHERE R.quiz_id= :quizId ORDER BY R.:sortBy :sortDir LIMIT :limit",nativeQuery = true)
+    List<Result> findAllByQuizId(Long quizId, String sortBy, String sortDir, int limit);
 
     @Query(value = "Select * from exam.results r where r.student_id = :student_id AND r.quiz_id = :quiz_id",nativeQuery = true)
     List<Result> findAllByQuizIdAndUserId(Long quiz_id, Long student_id);
@@ -27,4 +28,6 @@ public interface ResultRepository extends JpaRepository<Result, Long> {
     List<Result> findAllResults(Long quizId);
 
     List<Result> findByStudentId(Long userId);
+
+    List<Result> findAllByQuizId(Long quizId, Pageable pageable);
 }

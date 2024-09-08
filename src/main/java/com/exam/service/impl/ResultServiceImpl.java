@@ -17,11 +17,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ResultServiceImpl implements ResultService {
@@ -43,6 +50,7 @@ public class ResultServiceImpl implements ResultService {
         return this.resultRepository.save(result);
     }
 
+
     @Override
     public ResultResponseDto getResult(Long id) {
         Result result = this.resultRepository.findById(id).get();
@@ -62,7 +70,6 @@ public class ResultServiceImpl implements ResultService {
         response.setCategory(category);
         response.setQuiz(quizName);
         response.setRemark(result.getRemark());
-        response.setExamTime(result.getExamTime());
         response.setExamDate(result.getExamDate());
         System.out.println(result.getExamDate());
         response.setMaxMarks(result.getMaxMarks());
@@ -117,7 +124,6 @@ public class ResultServiceImpl implements ResultService {
                     result.getRemark(),
                     result.getMaxMarks(),
                     result.getExamDate(),
-                    result.getExamTime(),
                     result.getStatus()
             )).collect(Collectors.toList());
             return response;
@@ -140,7 +146,6 @@ public class ResultServiceImpl implements ResultService {
                     result.getRemark(),
                     result.getMaxMarks(),
                     result.getExamDate(),
-                    result.getExamTime(),
                     result.getStatus()
             )).collect(Collectors.toList());
             return response;
@@ -242,9 +247,14 @@ public class ResultServiceImpl implements ResultService {
                 result.getRemark(),
                 result.getMaxMarks(),
                 result.getExamDate(),
-                result.getExamTime(),
                 result.getStatus()
         )).collect(Collectors.toList());
         return response;
+    }
+
+    public List<Result> getResultsByQuizId(Long quizId, String sortBy, String sortDir, int limit) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(0, limit, sort);
+        return resultRepository.findAllByQuizId(quizId, pageable);
     }
 }

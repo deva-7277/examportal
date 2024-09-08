@@ -43,7 +43,7 @@ public class QuizController {
     }
 
     //get quiz
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> quizzes() {
         return ResponseEntity.ok(this.quizService.getQuizzes());
     }

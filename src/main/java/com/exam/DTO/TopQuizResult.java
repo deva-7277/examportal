@@ -11,7 +11,7 @@ public class TopQuizResult implements Serializable {
     private int rank;
     private String studentName;
     private String quizName;
-    private Long marksObtained;
+    private Integer marksObtained;
     private String maxMarks;
 
     public TopQuizResult(TopQuizResultBuilder builder){
@@ -21,7 +21,7 @@ public class TopQuizResult implements Serializable {
     public TopQuizResult() {
     }
 
-    public TopQuizResult(int rank, String studentName, String quizName, Long marksObtained, String maxMarks) {
+    public TopQuizResult(int rank, String studentName, String quizName, Integer marksObtained, String maxMarks) {
         this.rank = rank;
         this.studentName = studentName;
         this.quizName = quizName;
@@ -34,7 +34,7 @@ public class TopQuizResult implements Serializable {
         private int rank;
         private String studentName;
         private String quizName;
-        private Long marksObtained;
+        private Integer marksObtained;
         private Long maxMarks;
     }
 }

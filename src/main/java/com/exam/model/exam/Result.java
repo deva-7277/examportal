@@ -1,11 +1,20 @@
 package com.exam.model.exam;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Table(name ="results")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Result implements Serializable {
 
     @Id
@@ -19,184 +28,18 @@ public class Result implements Serializable {
     private Long attempted;
     private Long correct;
     private Long incorrect;
-    private Long marksObtained;
+    private Integer marksObtained;
     private String grade;
     private String remark;
 
     private String maxMarks;
 
-//    @Temporal(TemporalType.DATE)
     @Column(nullable = false)
     private String examDate;
 
-//    @Temporal(TemporalType.TIME)
-    @Column(nullable = false)
-    private String examTime;
-
-//    @PrePersist
-//    private void onCreate(){
-//        examDate = new Date();
-//        examTime = new Date();
-//    }
-
-
-
-    public Result() {
+    @PrePersist
+    private void onCreate(){
+        examDate = String.valueOf(new Date());
     }
 
-    public Result(String status, Long categoryId, Long quizId, Long examId, Long studentId, Long attempted, Long correct, Long incorrect, Long marksObtained, String grade, String remark, String maxMarks) {
-        this.status = status;
-        this.categoryId = categoryId;
-        this.quizId = quizId;
-        this.examId = examId;
-        this.studentId = studentId;
-        this.attempted = attempted;
-        this.correct = correct;
-        this.incorrect = incorrect;
-        this.marksObtained = marksObtained;
-        this.grade = grade;
-        this.remark = remark;
-        this.maxMarks = maxMarks;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public Long getQuizId() {
-        return quizId;
-    }
-
-    public void setQuizId(Long quizId) {
-        this.quizId = quizId;
-    }
-
-    public Long getExamId() {
-        return examId;
-    }
-
-    public void setExamId(Long examId) {
-        this.examId = examId;
-    }
-
-    public Long getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
-    }
-
-    public Long getAttempted() {
-        return attempted;
-    }
-
-    public void setAttempted(Long attempted) {
-        this.attempted = attempted;
-    }
-
-    public Long getCorrect() {
-        return correct;
-    }
-
-    public void setCorrect(Long correct) {
-        this.correct = correct;
-    }
-
-    public Long getIncorrect() {
-        return incorrect;
-    }
-
-    public void setIncorrect(Long incorrect) {
-        this.incorrect = incorrect;
-    }
-
-    public Long getMarksObtained() {
-        return marksObtained;
-    }
-
-    public void setMarksObtained(Long marksObtained) {
-        this.marksObtained = marksObtained;
-    }
-
-    public String getGrade() {
-        return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public String getMaxMarks() {
-        return maxMarks;
-    }
-
-    public void setMaxMarks(String maxMarks) {
-        this.maxMarks = maxMarks;
-    }
-
-    public String getExamDate() {
-        return examDate;
-    }
-
-    public void setExamDate(Date examDate) {
-        this.examDate = String.valueOf(examDate);
-    }
-
-    public String getExamTime() {
-        return examTime;
-    }
-
-    public void setExamTime(Date examTime) {
-        this.examTime = String.valueOf(examTime);
-    }
-
-    @Override
-    public String toString() {
-        return "Result{" +
-                "id=" + id +
-                ", status='" + status + '\'' +
-                ", categoryId=" + categoryId +
-                ", quizId=" + quizId +
-                ", examId=" + examId +
-                ", studentId=" + studentId +
-                ", attempted=" + attempted +
-                ", correct=" + correct +
-                ", incorrect=" + incorrect +
-                ", marksObtained=" + marksObtained +
-                ", grade='" + grade + '\'' +
-                ", remark='" + remark + '\'' +
-                ", maxMarks=" + maxMarks +
-                ", examDate=" + examDate +
-                ", examTime=" + examTime +
-                '}';
-    }
 }

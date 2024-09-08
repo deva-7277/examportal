@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -19,14 +20,12 @@ public class ResultResponseDto implements Serializable {
     private Long attempted;
     private Long correct;
     private Long incorrect;
-    private Long marksObtained;
+    private Integer marksObtained;
     private String grade;
     private String remark;
     private String maxMarks;
 
     private String examDate;
-
-    private String examTime;
 
     private String status;
 
@@ -40,7 +39,7 @@ public class ResultResponseDto implements Serializable {
     public ResultResponseDto() {
     }
 
-    public ResultResponseDto(Long id, String category, String quiz, Long studentId, String studentName, Long attempted, Long correct, Long incorrect, Long marksObtained, String grade, String remark, String maxMarks, String examDate, String examTime, String status) {
+    public ResultResponseDto(Long id, String category, String quiz, Long studentId, String studentName, Long attempted, Long correct, Long incorrect, Integer marksObtained, String grade, String remark, String maxMarks, String examDate, String status) {
         this.id = id;
         this.category = category;
         this.quiz = quiz;
@@ -54,7 +53,6 @@ public class ResultResponseDto implements Serializable {
         this.remark = remark;
         this.maxMarks = maxMarks;
         this.examDate = examDate;
-        this.examTime = examTime;
         this.status = status;
     }
 }
